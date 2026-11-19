@@ -1,0 +1,185 @@
+{
+  "type": "function",
+  "function": {
+    "name": "spektra_psd",
+    "description": "用户给照片和效果后，默认原尺寸生成经独立图层重合成校验的16位分层PSD或PSB、TIFF参考、压缩对照和recipe。首次先spektra_menu给教程。小图psd-tools、大图独立分块合成；续改只传recipe与偏好，output必须全新。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "string",
+          "description": "首轮必填：执行宿主本机照片的绝对路径。"
+        },
+        "recipe": {
+          "type": "string",
+          "description": "修订时填上一轮 recipe.json 的本机绝对路径，沿用原片和参数。"
+        },
+        "output": {
+          "type": "string",
+          "description": "本机全新输出目录的绝对路径。"
+        },
+        "intent": {
+          "type": "string",
+          "description": "用户额外偏好原话，可省略或为空，例如 不要颗粒、亮一点。明确数值请写入adjustments。"
+        },
+        "preset": {
+          "type": "string",
+          "enum": [
+            "natural",
+            "gold200",
+            "ektar100",
+            "airy",
+            "warm",
+            "cinema",
+            "vivid",
+            "bw"
+          ],
+          "description": "兼容底层配方的高级入口；普通调用使用effect即可。不要同时指定互相冲突的effect和preset。"
+        },
+        "engine": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "spektralab",
+            "spektrafilm"
+          ],
+          "description": "默认auto优先Lab，完整阶段失败一次回退film并披露。明确只用Lab时选spektralab。"
+        },
+        "max_edge": {
+          "type": "integer",
+          "description": "默认0，保留EXIF转正后原尺寸；1-300000按比例限制长边且不放大小图。与显式width/height互斥（此时可省略或为0）。不设固定总像素上限，受PSB单边300000及实际磁盘、内存/显存、引擎约束；资源不足报错，不静默缩小。",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 300000
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300000,
+          "description": "显式输出宽度，单位像素；只填宽度时按原比例推算高度。可放大但不恢复细节。双边默认须保持原比例；不可同时用非零max_edge。"
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300000,
+          "description": "显式输出高度，单位像素；只填高度时按原比例推算宽度。双边默认须保持原比例；改变比例需用户明确要求resize_mode=stretch。"
+        },
+        "resize_mode": {
+          "type": "string",
+          "enum": ["keep_aspect", "stretch"],
+          "default": "keep_aspect",
+          "description": "默认保持原比例；双边与原比例不符时报错。仅用户明确要求拉伸时选stretch。"
+        },
+        "document_format": {
+          "type": "string",
+          "enum": ["auto", "psd", "psb"],
+          "default": "auto",
+          "description": "auto在任一边超过30000或预计分层文件超过2GB时改用真实PSB；outputs.psd返回实际.psd/.psb路径。可强制psb；强制psd超格式限制会报错。"
+        },
+        "archive": {
+          "type": "boolean",
+          "default": true,
+          "description": "默认生成delivery.zip；false省略压缩包，节省大图重复打包的时间与磁盘。其他输出仍保留，outputs.archive可不存在。"
+        },
+        "adjustments": {
+          "type": "object",
+          "description": "明确覆盖参数，可省略。brightness_ev控制最终明暗；exposure_ev控制胶片曝光。",
+          "properties": {
+            "exposure_ev": {
+              "type": "number",
+              "minimum": -2.0,
+              "maximum": 2.0
+            },
+            "brightness_ev": {
+              "type": "number",
+              "minimum": -1.5,
+              "maximum": 1.5
+            },
+            "print_exposure": {
+              "type": "number",
+              "minimum": 0.25,
+              "maximum": 4.0
+            },
+            "grain": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "halation": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "dir_couplers": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "contrast": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1.5
+            },
+            "saturation": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.5
+            },
+            "warmth": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "tint": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "fade": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 0.15
+            },
+            "strength": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "auto_exposure": {
+              "type": "boolean"
+            },
+            "film": {
+              "type": "string",
+              "enum": [
+                "kodak_portra_400",
+                "kodak_gold_200",
+                "kodak_ektar_100"
+              ]
+            },
+            "paper": {
+              "type": "string",
+              "enum": [
+                "kodak_portra_endura"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "effect": {
+          "type": "string",
+          "description": "首轮选菜单编号1-6或名称：1 Portra400、2 Gold200、3 Ektar100、4 清透淡彩、5 冷调电影、6 黑白灰度。也支持胶片名。续改只调整原配方时不传，换胶片才传。"
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Python固定纹理种子，默认20261112；native支持情况按返回metadata，普通续改沿用。"
+        }
+      },
+      "required": [
+        "output"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

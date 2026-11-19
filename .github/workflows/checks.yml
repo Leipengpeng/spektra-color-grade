@@ -1,0 +1,20 @@
+name: Public package checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  source-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Check Python syntax
+        run: python -m compileall -q scripts tools tests
+      - name: Test offline entrypoints and archive boundary
+        run: python -m unittest discover -s tests -v
+      - name: Build the portable Skill
+        run: python tools/build_skill_zip.py --output dist/spektra-color-grade.zip

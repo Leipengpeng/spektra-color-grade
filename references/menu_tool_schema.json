@@ -1,0 +1,12 @@
+{
+  "type": "function",
+  "function": {
+    "name": "spektra_menu",
+    "description": "首次打开先展示完整入门教程，说明功能、胶片菜单、常用参数、提交照片和交付方式。首次用tutorial_markdown（同message），后续新照片用menu_markdown；完整参数报告在parameter_report_markdown。此工具不处理照片。",
+    "parameters": {
+      "type": "object",
+      "properties": {},
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,17 @@
+# Core-only dependencies for the pinned spektrafilm 0.3.4 checkout.
+# Install the upstream checkout separately with --no-deps after these succeed.
+# GUI/napari/LUT-creator entrypoints are not covered by this file.
+-r requirements.txt
+numpy~=2.4
+scipy~=1.17
+colour-science~=0.4.6
+scikit-image~=0.26
+matplotlib~=3.10
+opt-einsum~=3.4.0
+numba~=0.64
+OpenImageIO~=3.1.11
+pyfftw~=0.15.0
+rawpy~=0.26.1
+exiv2~=0.18.1
+lensfunpy~=1.18.0
+Pillow~=12.1

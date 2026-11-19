@@ -1,0 +1,156 @@
+{
+  "type": "function",
+  "function": {
+    "name": "spektra_grade",
+    "description": "收到一张照片和用户选择后在本机调色。首次先用spektra_menu展示胶片菜单与参数说明；首轮传input和effect，续改传recipe，output必须全新。默认评审图长边1600，不覆盖原片。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "string",
+          "description": "首轮必填：执行宿主本机照片的绝对路径。"
+        },
+        "recipe": {
+          "type": "string",
+          "description": "修订时填上一轮 recipe.json 的本机绝对路径，沿用原片和参数。"
+        },
+        "output": {
+          "type": "string",
+          "description": "本机全新输出目录的绝对路径。"
+        },
+        "intent": {
+          "type": "string",
+          "description": "用户额外偏好原话，可省略或为空，例如 不要颗粒、亮一点。明确数值请写入adjustments。"
+        },
+        "preset": {
+          "type": "string",
+          "enum": [
+            "natural",
+            "gold200",
+            "ektar100",
+            "airy",
+            "warm",
+            "cinema",
+            "vivid",
+            "bw"
+          ],
+          "description": "兼容底层配方的高级入口；普通调用使用effect即可。不要同时指定互相冲突的effect和preset。"
+        },
+        "engine": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "spektralab",
+            "spektrafilm"
+          ],
+          "description": "按本Skill默认选择spektralab；auto允许回退并报告实际引擎。用户明确只用Lab时不能用auto。"
+        },
+        "max_edge": {
+          "type": "integer",
+          "description": "默认1600；0为原尺寸，其他取值256至8192。",
+          "minimum": 0,
+          "maximum": 8192
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "jpg",
+            "png"
+          ]
+        },
+        "adjustments": {
+          "type": "object",
+          "description": "明确覆盖参数，可省略。brightness_ev控制最终明暗；exposure_ev控制胶片曝光。",
+          "properties": {
+            "exposure_ev": {
+              "type": "number",
+              "minimum": -2.0,
+              "maximum": 2.0
+            },
+            "brightness_ev": {
+              "type": "number",
+              "minimum": -1.5,
+              "maximum": 1.5
+            },
+            "print_exposure": {
+              "type": "number",
+              "minimum": 0.25,
+              "maximum": 4.0
+            },
+            "grain": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "halation": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "dir_couplers": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "contrast": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1.5
+            },
+            "saturation": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.5
+            },
+            "warmth": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "tint": {
+              "type": "number",
+              "minimum": -1.0,
+              "maximum": 1.0
+            },
+            "fade": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 0.15
+            },
+            "strength": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "auto_exposure": {
+              "type": "boolean"
+            },
+            "film": {
+              "type": "string",
+              "enum": [
+                "kodak_portra_400",
+                "kodak_gold_200",
+                "kodak_ektar_100"
+              ]
+            },
+            "paper": {
+              "type": "string",
+              "enum": [
+                "kodak_portra_endura"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "effect": {
+          "type": "string",
+          "description": "首轮选菜单编号1-6或名称：1 Portra400、2 Gold200、3 Ektar100、4 清透淡彩、5 冷调电影、6 黑白灰度。也支持胶片名。续改只调整原配方时不传，换胶片才传。"
+        }
+      },
+      "required": [
+        "output"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

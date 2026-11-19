@@ -1,0 +1,50 @@
+# Machine-specific settings and credentials
+runtime.local.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python environments and caches
+.venv*/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# Locally installed engines and user work
+runtime/
+SpektraRuntime/
+apps/
+repos/
+samples/
+outputs/
+results/
+recordings/
+*.psd
+*.psb
+*.tif
+*.tiff
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.raw
+*.nef
+*.cr2
+*.arw
+*.mp4
+*.mkv
+*.exe
+*.dll
+*.dmg
+
+# Release ZIPs are built locally and attached to GitHub Releases
+dist/
+*.zip
+*.log
+.DS_Store
+Thumbs.db

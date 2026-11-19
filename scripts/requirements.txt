@@ -1,0 +1,5 @@
+Pillow>=10
+numpy>=1.26
+tifffile>=2024.1
+OpenImageIO>=3.0
+psd-tools[composite]>=1.26.1

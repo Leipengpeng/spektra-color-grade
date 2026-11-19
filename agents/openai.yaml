@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spektra 本地调色"
+  short_description: "对话选择胶片，通过固定流程生成经校验的16位分层PSD、对照与配方"
+  default_prompt: "用 $spektra-color-grade 先给我入门教程，说明能做什么、如何选胶片和参数，再按我的选择处理照片。"
